@@ -1,0 +1,32 @@
+name: binderful_store
+description: A new Flutter project.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.0.6 <4.0.0"
+
+dependencies:
+  csv: ^6.0.0
+  desktop_window: ^0.4.0
+  file_picker: ^8.0.5
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.2.0+1
+  go_router: ^14.2.0
+  google_fonts: ^6.2.1
+  html: ^0.15.4
+  http: ^1.0.0
+  path_provider: ^2.1.1
+  provider: ^6.0.3
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^5.0.0+1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/300.png

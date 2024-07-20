@@ -76,6 +76,10 @@ class HomePage extends StatelessWidget {
                               RouteNames.updatePrices.pushNamed(context),
                           isWorkInProgress: true,
                         ),
+                        HomeMenuItem(
+                          title: 'Profit Calc',
+                          onTap: () => RouteNames.profitCalc.pushNamed(context),
+                        ),
                       ],
                     ),
                   ),

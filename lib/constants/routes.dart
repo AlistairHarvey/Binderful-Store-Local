@@ -7,6 +7,7 @@ class Routes {
   static const newSet = '/newSet';
   static const updateSets = '/updateSets';
   static const updatePrices = '/updatePrices';
+  static const profitCalc = '/profitCalc';
 }
 
 class RouteNames {
@@ -15,6 +16,7 @@ class RouteNames {
   static const newSet = 'newSet';
   static const updateSets = 'updateSets';
   static const updatePrices = 'updatePrices';
+  static const profitCalc = 'profitCalc';
 }
 
 extension RouteNavigation on String {

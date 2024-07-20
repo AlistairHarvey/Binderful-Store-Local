@@ -2,6 +2,7 @@ import 'package:binderful_store/constants/routes.dart';
 import 'package:binderful_store/screens/add_cards/add_cards_screen.dart';
 import 'package:binderful_store/screens/homepage/home.dart';
 import 'package:binderful_store/screens/new_set_experiment/new_set_screen.dart';
+import 'package:binderful_store/screens/profit_calc/profit_calc_screen.dart';
 import 'package:binderful_store/screens/update_prices/update_prices_screen.dart';
 import 'package:binderful_store/screens/update_sets/update_sets_screen.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,13 @@ final router = GoRouter(
       name: RouteNames.updatePrices,
       builder: (context, state) {
         return const UpdatePricesScreen();
+      },
+    ),
+    GoRoute(
+      path: Routes.profitCalc,
+      name: RouteNames.profitCalc,
+      builder: (context, state) {
+        return const ProfitCalc();
       },
     ),
   ],

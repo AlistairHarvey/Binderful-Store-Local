@@ -14,7 +14,7 @@ class AddCardsService {
   ) async {
     final response = await http.get(
       Uri.parse(
-        'http://localhost:5001/pricingHistory/$setID-${cardNo.padLeft(3, '0')}',
+        'http://localhost:5027/api/Pokemon/PricingHistory/$setID-${cardNo.padLeft(3, '0')}',
       ),
     );
 

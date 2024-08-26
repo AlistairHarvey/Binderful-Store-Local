@@ -1,4 +1,5 @@
 import 'package:binderful_store/constants/constants.dart';
+import 'package:binderful_store/screens/add_cards/controller/add_cards_controller.dart';
 import 'package:binderful_store/screens/add_cards/controller/extended_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -72,8 +73,9 @@ class _CardPricingTileState extends State<CardPricingTile> {
                           const Text('PokeCardValues Pricing'),
                           Row(
                             children: [
-                              if (controller.state.price?.holoValues.last !=
-                                  0.0)
+                              if (pricingListCheck(
+                                controller.state.price?.holoValues,
+                              ))
                                 Padding(
                                   padding: const HalfGutter(),
                                   child: Column(
@@ -82,17 +84,15 @@ class _CardPricingTileState extends State<CardPricingTile> {
                                       ElevatedButton(
                                         onPressed: () {},
                                         child: Text(
-                                          controller
-                                              .state.price!.holoValues.last
-                                              .toString(),
+                                          _price(controller).toString(),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              if (controller
-                                      .state.price?.reverseHoloValues.last !=
-                                  0.0)
+                              if (pricingListCheck(
+                                controller.state.price?.reverseHoloValues,
+                              ))
                                 Padding(
                                   padding: const HalfGutter(),
                                   child: Column(
@@ -109,8 +109,9 @@ class _CardPricingTileState extends State<CardPricingTile> {
                                     ],
                                   ),
                                 ),
-                              if (controller.state.price?.nonHoloValues.last !=
-                                  0.0)
+                              if (pricingListCheck(
+                                controller.state.price?.nonHoloValues,
+                              ))
                                 Padding(
                                   padding: const HalfGutter(),
                                   child: Column(
@@ -184,5 +185,19 @@ class _CardPricingTileState extends State<CardPricingTile> {
         ),
       ],
     );
+  }
+
+  bool pricingListCheck(List<double>? values) {
+    if (values == null) return false;
+    if (values.isEmpty) return false;
+    if (values.last == 0.0) return false;
+    return true;
+  }
+
+  double _price(
+    AddCardController controller,
+  ) {
+    return controller.state.price?.holoValues.last ??
+        (controller.state.isReverseHoloMode ? 0.5 : 0.0);
   }
 }

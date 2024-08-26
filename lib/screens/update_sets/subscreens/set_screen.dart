@@ -168,23 +168,24 @@ class SetScreen extends StatelessWidget {
                                             color: hasPricingHistory
                                                 ? Colors.green
                                                 : (hasPricingHistory &&
-                                                        controller
-                                                            .pricingHistories
-                                                            .firstWhere(
-                                                              (element) =>
-                                                                  element
-                                                                      .setID ==
-                                                                  set.id,
-                                                            )
-                                                            .lastUpdateDate
-                                                            .isBefore(
-                                                              DateTime.now()
-                                                                  .subtract(
-                                                                const Duration(
-                                                                  days: 14,
-                                                                ),
-                                                              ),
-                                                            ))
+                                                        (controller
+                                                                .pricingHistories
+                                                                .firstWhere(
+                                                                  (element) =>
+                                                                      element
+                                                                          .setID ==
+                                                                      set.id,
+                                                                )
+                                                                .lastUpdateDate
+                                                                ?.isBefore(
+                                                                  DateTime.now()
+                                                                      .subtract(
+                                                                    const Duration(
+                                                                      days: 14,
+                                                                    ),
+                                                                  ),
+                                                                ) ??
+                                                            false))
                                                     ? Colors.red
                                                     : Colors.amber,
                                           ),

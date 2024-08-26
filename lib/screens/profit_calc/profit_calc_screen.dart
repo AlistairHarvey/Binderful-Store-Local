@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfitCalc extends StatefulWidget {
   const ProfitCalc({super.key});
@@ -39,7 +40,17 @@ class _ProfitCalcState extends State<ProfitCalc> {
     return Scaffold(
       body: Column(
         children: [
-          const Text('Profit calc'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: () => context.pop(),
+                child: const Text('back'),
+              ),
+              const Text('Profit calc'),
+              const SizedBox(),
+            ],
+          ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Row(
@@ -52,7 +63,7 @@ class _ProfitCalcState extends State<ProfitCalc> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (v) => {
-                      setState(_profit),
+                      setState(_calcProfit),
                     },
                   ),
                 ),
@@ -64,7 +75,7 @@ class _ProfitCalcState extends State<ProfitCalc> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (v) => {
-                      setState(_profit),
+                      setState(_calcProfit),
                     },
                   ),
                 ),
@@ -76,7 +87,7 @@ class _ProfitCalcState extends State<ProfitCalc> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (v) => {
-                      setState(_profit),
+                      setState(_calcProfit),
                     },
                     enabled: false,
                   ),
@@ -89,7 +100,7 @@ class _ProfitCalcState extends State<ProfitCalc> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (v) => {
-                      setState(_profit),
+                      setState(_calcProfit),
                     },
                     enabled: false,
                   ),
@@ -102,7 +113,7 @@ class _ProfitCalcState extends State<ProfitCalc> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (v) => {
-                      setState(_profit),
+                      setState(_calcProfit),
                     },
                     enabled: false,
                   ),
@@ -115,7 +126,7 @@ class _ProfitCalcState extends State<ProfitCalc> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (v) => {
-                      setState(_profit),
+                      setState(_calcProfit),
                     },
                   ),
                 ),
@@ -127,7 +138,7 @@ class _ProfitCalcState extends State<ProfitCalc> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (v) => {
-                      setState(_profit),
+                      setState(_calcProfit),
                     },
                   ),
                 ),
@@ -154,45 +165,65 @@ class _ProfitCalcState extends State<ProfitCalc> {
     );
   }
 
-  void _profit() {
-    final salesPrice = double.tryParse(salePriceController.text) ?? 0;
-    if (salesPrice == 0) return;
-    final vat = salesPrice / 6;
-    final shopifyCost = (salesPrice * 0.02) + 0.25;
+  void _calcProfit() {
+    profit = _profit(1);
+    profit2 = _profit(2);
+    profitCase = _profit(int.tryParse(caseCountController.text) ?? 6);
+  }
+
+  double _profit(int quantity) {
+    final salesPrice =
+        (double.tryParse(salePriceController.text) ?? 0) * quantity;
+    if (salesPrice == 0) return 0;
+    final vat = calculateVat(salesPrice);
+    final shopifyCost = caluclateShopifyCosts(salesPrice);
     final shipping = double.tryParse(shippingController.text) ?? 0;
-    final cost = double.tryParse(costCostController.text) ?? 0;
-    final preTax = salesPrice - cost - shipping - shopifyCost - vat;
+    final cost = (double.tryParse(costCostController.text) ?? 0) * quantity;
+    final preTax =
+        calculatePreTaxProfit(salesPrice, cost, shipping, vat, shopifyCost);
 
-    final corpTax = preTax * 0.19;
-    profit = preTax - corpTax;
+    final corpTax = calculateCorpTax(preTax);
+    final profit = calculateProfit(preTax, corpTax);
 
-    percent = (profit / cost) * 100;
+    if (quantity == 1) {
+      percent = (profit / cost) * 100;
+    } else if (quantity == 2) {
+      percent2 = (profit / cost) * 100;
+    } else {
+      percentCase = (profit / cost) * 100;
+    }
+    return profit;
+  }
 
-    final preTaxprofit2 = (salesPrice * 2) -
-        (cost * 2) -
-        shipping -
-        (shopifyCost * 2) -
-        (vat * 2);
-
-    final corpTax2 = preTaxprofit2 * 0.19;
-    profit2 = preTaxprofit2 - corpTax2;
-
-    percent2 = (profit2 / (cost * 2)) * 100;
-
-    final caseCount = int.tryParse(caseCountController.text) ?? 1;
-    final preTaxprofitCase = (salesPrice * caseCount) -
-        (cost * caseCount) -
-        shipping -
-        (shopifyCost * caseCount) -
-        (vat * caseCount);
-    final corpTaxCase = preTaxprofitCase * 0.19;
-
-    profitCase = preTaxprofitCase - corpTaxCase;
-
-    percentCase = (profitCase / (cost * caseCount)) * 100;
-
+  void _setControllers(double vat, double shopifyCost, double corpTax) {
     vatController.text = vat.toString();
     shopifyCostController.text = shopifyCost.toString();
     corporationTaxController.text = corpTax.toString();
   }
+}
+
+double calculateVat(double salesPrice) {
+  return salesPrice / 6;
+}
+
+double caluclateShopifyCosts(double salesPrice) {
+  return (salesPrice * 0.02) + 0.25;
+}
+
+double calculatePreTaxProfit(
+  double salesPrice,
+  double cost,
+  double shipping,
+  double vat,
+  double shopifyCost,
+) {
+  return salesPrice - (cost + shipping + vat + shopifyCost);
+}
+
+double calculateCorpTax(double preTaxProfit) {
+  return preTaxProfit * 0.19;
+}
+
+double calculateProfit(double preTaxProfit, double corpTax) {
+  return preTaxProfit - corpTax;
 }

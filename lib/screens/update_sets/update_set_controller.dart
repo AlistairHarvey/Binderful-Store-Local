@@ -70,7 +70,9 @@ class UpdateSetController extends ChangeNotifier {
 
     //TODO sort this to come from above call
     final setsPricingHistoryDate = await http.get(
-      Uri.parse('http://localhost:5001/getAllSetsLastUpdateDates'),
+      Uri.parse(
+        'http://localhost:5027/api/Pokemon/Sets/getAllSetsLastUpdateDates',
+      ),
     );
 
     final ravenSetHistoryData =
@@ -313,84 +315,82 @@ class UpdateSetController extends ChangeNotifier {
       final name = '${set.id}-${key.split('/').first}';
 
       final reverseHoloValue = value
-              .where(
-                (element) =>
-                    element.rarity.contains('Reverse Holo') &&
-                    element.rarity.contains('Unlimited'),
-              )
-              .firstOrNull
-              ?.value ??
-          0;
+          .where(
+            (element) =>
+                element.rarity.contains('Reverse Holo') &&
+                element.rarity.contains('Unlimited'),
+          )
+          .firstOrNull
+          ?.value;
       final commonValue = value
-              .where(
-                (element) =>
-                    element.rarity.contains('Non-Holo') &&
-                    element.rarity.contains('Unlimited'),
-              )
-              .firstOrNull
-              ?.value ??
-          0;
+          .where(
+            (element) =>
+                element.rarity.contains('Non-Holo') &&
+                element.rarity.contains('Unlimited'),
+          )
+          .firstOrNull
+          ?.value;
       final holoValue = value
-              .where(
-                (element) =>
-                    !element.rarity.contains('Non-Holo') &&
-                    !element.rarity.contains('Reverse Holo') &&
-                    element.rarity.contains('Unlimited'),
-              )
-              .firstOrNull
-              ?.value ??
-          0;
+          .where(
+            (element) =>
+                !element.rarity.contains('Non-Holo') &&
+                !element.rarity.contains('Reverse Holo') &&
+                element.rarity.contains('Unlimited'),
+          )
+          .firstOrNull
+          ?.value;
 
       final firstEditionShadowlessValues = value
-              .where(
-                (element) => element.rarity.contains('1st Edition Shadowless'),
-              )
-              .firstOrNull
-              ?.value ??
-          0;
+          .where(
+            (element) => element.rarity.contains('1st Edition Shadowless'),
+          )
+          .firstOrNull
+          ?.value;
 
       final firstEditionValues = value
-              .where(
-                (element) =>
-                    element.rarity.contains('1st Edition') &&
-                    !element.rarity.contains('Shadowless'),
-              )
-              .firstOrNull
-              ?.value ??
-          0;
+          .where(
+            (element) =>
+                element.rarity.contains('1st Edition') &&
+                !element.rarity.contains('Shadowless'),
+          )
+          .firstOrNull
+          ?.value;
 
       final shadowlessValues = value
-              .where(
-                (element) =>
-                    element.rarity.contains('Shadowless') &&
-                    !element.rarity.contains('1st Edition'),
-              )
-              .firstOrNull
-              ?.value ??
-          0;
+          .where(
+            (element) =>
+                element.rarity.contains('Shadowless') &&
+                !element.rarity.contains('1st Edition'),
+          )
+          .firstOrNull
+          ?.value;
 
       final print1999to2000Values = value
-              .where((element) => element.rarity.contains('1999-2000 Print'))
-              .firstOrNull
-              ?.value ??
-          0;
+          .where((element) => element.rarity.contains('1999-2000 Print'))
+          .firstOrNull
+          ?.value;
 
       pricingHistory.add(
         PricingHistoryModel(
           pricingHistoryID: name,
           setID: set.id,
-          holoValues: [holoValue],
-          reverseHoloValues: [reverseHoloValue],
-          nonHoloValues: [commonValue],
+          holoValues: holoValue != null ? [holoValue] : [],
+          reverseHoloValues: reverseHoloValue != null ? [reverseHoloValue] : [],
+          nonHoloValues: commonValue != null ? [commonValue] : [],
           updateDates: [DateTime.now().toIso8601String()],
-          firstEditionValues: [firstEditionValues],
-          firstEditionShadowlessValues: [firstEditionShadowlessValues],
-          shadowlessValues: [shadowlessValues],
-          print1999to2000Values: [print1999to2000Values],
+          firstEditionValues:
+              firstEditionValues != null ? [firstEditionValues] : [],
+          firstEditionShadowlessValues: firstEditionShadowlessValues != null
+              ? [firstEditionShadowlessValues]
+              : [],
+          shadowlessValues: shadowlessValues != null ? [shadowlessValues] : [],
+          print1999to2000Values:
+              print1999to2000Values != null ? [print1999to2000Values] : [],
         ),
       );
     });
-    final apiUrl = Uri.parse('http://localhost:5001/pricingHistory/add');
+    final apiUrl =
+        Uri.parse('http://localhost:5027/api/Pokemon/PricingHistory/add');
     final length = cardNumbers.length;
     for (var i = 0; i < cardNumbers.length; i += 15) {
       var count = 0;

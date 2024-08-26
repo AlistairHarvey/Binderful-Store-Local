@@ -42,7 +42,7 @@ class AddCardController extends ChangeNotifier {
     );
     state.total += value * quantity;
     state.results.clear();
-    state.cardNoController.clear();
+    if (!state.isReverseHoloMode) state.cardNoController.clear();
     state.price = null;
 
     notifyListeners();
@@ -50,6 +50,16 @@ class AddCardController extends ChangeNotifier {
 
   void viewAll() {
     state.isViewAll = true;
+    notifyListeners();
+  }
+
+  void reverseHoloMode() {
+    state.isReverseHoloMode = !state.isReverseHoloMode;
+    notifyListeners();
+  }
+
+  void tradeInMode() {
+    state.isTradeIn = !state.isTradeIn;
     notifyListeners();
   }
 

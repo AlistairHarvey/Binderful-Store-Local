@@ -90,18 +90,18 @@ class PricingHistoryUpdateDates {
   factory PricingHistoryUpdateDates.fromJson(Map<String, dynamic> json) {
     return PricingHistoryUpdateDates(
       setID: json['setID'] as String?,
-      lastUpdateDate: DateTime.parse(json['firstUpdateDate'] as String),
+      lastUpdateDate: DateTime.tryParse(json['firstUpdateDate'] as String),
       pricingHistoryID: json['pricingHistoryID'] as String,
     );
   }
   final String? setID;
-  final DateTime lastUpdateDate;
+  final DateTime? lastUpdateDate;
   final String pricingHistoryID;
 
   Map<String, dynamic> toJson() {
     return {
       'setID': setID,
-      'firstUpdateDate': lastUpdateDate.toIso8601String(),
+      'firstUpdateDate': lastUpdateDate?.toIso8601String() ?? DateTime.now(),
       'pricingHistoryID': pricingHistoryID,
     };
   }

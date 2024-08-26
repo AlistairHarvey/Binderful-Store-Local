@@ -16,5 +16,7 @@ class AddCardState {
   final List<CardUploadClass> savedCards = <CardUploadClass>[];
   bool loading = false;
   bool isViewAll = false;
+  bool isTradeIn = false;
+  bool isReverseHoloMode = false;
   double total = 0;
 }

@@ -35,6 +35,29 @@ class SearchSection extends StatelessWidget {
           ),
           Column(
             children: [
+              Padding(
+                padding: const Gutter(),
+                child: ElevatedButton(
+                  onPressed: controller.tradeInMode,
+                  child: const Text('Trade In Mode'),
+                ),
+              ),
+              Padding(
+                padding: const Gutter(),
+                child: ElevatedButton(
+                  onPressed: controller.reverseHoloMode,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: controller.state.isReverseHoloMode
+                        ? Colors.green
+                        : Colors.red,
+                  ),
+                  child: const Text('Reverse Holo Mode'),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
               if (!controller.state.isViewAll)
                 Row(
                   children: [

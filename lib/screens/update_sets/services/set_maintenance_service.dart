@@ -22,7 +22,7 @@ class SetMaintenanceService {
 
   Future<List<MySetData>?> getSetDataFromRavenDB() async {
     final ravenResponse = await http.get(
-      Uri.parse('http://localhost:5001/getSets'),
+      Uri.parse('http://localhost:5027/api/Pokemon/Sets/All'),
     );
     try {
       final ravenJsonData = jsonDecode(ravenResponse.body) as List<dynamic>;
@@ -50,8 +50,8 @@ class SetMaintenanceService {
   }
 
   Future<bool> removeSet(String setID) async {
-    final response =
-        await http.delete(Uri.parse('http://localhost:5001/removeData/$setID'));
+    final response = await http
+        .delete(Uri.parse('http://localhost:5027/api/Pokemon/Sets/$setID'));
 
     if (response.statusCode == 200) {
       debugPrint('Set removed successfully');
@@ -68,7 +68,7 @@ class SetMaintenanceService {
     final body = json.encode(set.toJson());
     debugPrint(body);
     final ravenResponse = await http.post(
-      Uri.parse('http://localhost:5001/addData'),
+      Uri.parse('http://localhost:5027/api/Sets/AddSet'),
       body: body,
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ class SetMaintenanceService {
   Future<void> addCardToRaven(List<CardRaven> cards) async {
     final body = json.encode(CardRaven.toJsonList(cards));
     await http.post(
-      Uri.parse('http://localhost:5001/addCard'),
+      Uri.parse('http://localhost:5027/api/Pokemon/Cards/AddCards'),
       body: body,
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ class SetMaintenanceService {
 
   Future<List<CardRaven>> getCardsFromRaven(String setID) async {
     final ravenResponse = await http.get(
-      Uri.parse('http://localhost:5001/cards/$setID'),
+      Uri.parse('http://localhost:5027/api/Pokemon/Cards/AllCardsFrom/$setID'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -100,7 +100,7 @@ class SetMaintenanceService {
 
   Future<bool> ravenHasCardsFromSet(String setID) async {
     final ravenResponse = await http.get(
-      Uri.parse('http://localhost:5001/cardsContaintsSet/$setID'),
+      Uri.parse('http://localhost:5027/api/Sets/cardsContainsSet/$setID'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

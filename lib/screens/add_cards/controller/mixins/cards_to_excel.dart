@@ -9,13 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 mixin CardsToExcel on AddCardController {
-  Future<void> export() async {
+  Future<String> export() async {
     try {
       // Get the directory where you can save files
       final directory = await getApplicationDocumentsDirectory();
 
+      final fileName = 'singles-${DateTime.now().toString().substring(0, 10)}.csv';
+
+      final path =
+          '${directory.path}/$fileName';
+
       final file = File(
-        '${directory.path}/singles-${DateTime.now().toString().substring(0, 10)}.csv',
+        path,
       );
 
       // Convert the CSV data to a CSV string
@@ -26,8 +31,10 @@ mixin CardsToExcel on AddCardController {
 
       // Show a success message or perform any other actions
       debugPrint('CSV data exported successfully to ${file.path}');
+      return fileName;
     } catch (e) {
       debugPrint('Error exporting CSV data: $e');
+      return '';
     }
   }
 
@@ -95,10 +102,13 @@ mixin CardsToExcel on AddCardController {
 
   List<String> pokemonToProduct(CardUploadClass pokemon) {
     final setTag = pokemon.set.id.toUpperCase();
+
+    final isReverse = state.isReverseHoloMode;
+
     return [
-      'pokemon-singles-${pokemon.set.name}-${pokemon.name}${pokemon.number}/${pokemon.set.printedTotal}',
-      'Pokemon Singles - ${pokemon.set.name} - ${pokemon.name} ${pokemon.number}/${pokemon.set.printedTotal}',
-      '<p>Pokemon Singles - ${pokemon.set.name} - ${pokemon.name} ${pokemon.number}/${pokemon.set.printedTotal}.</p>'
+      'pokemon-singles-${pokemon.set.name}-${pokemon.name}${pokemon.number}/${pokemon.set.printedTotal}${isReverse ? '/ReverseHolo' : ''}',
+      'Pokemon Singles - ${pokemon.set.name} - ${pokemon.name} ${pokemon.number}/${pokemon.set.printedTotal}${isReverse ? ' (Reverse Holo)' : ''}',
+      '<p>Pokemon Singles - ${pokemon.set.name} - ${pokemon.name} ${pokemon.number}/${pokemon.set.printedTotal}${isReverse ? ' (Reverse Holo)' : ''}.</p>'
           '<p> </p>'
           '<p>Pack fresh straight to sleeve. </p>'
           '<p> </p>'
@@ -106,7 +116,7 @@ mixin CardsToExcel on AddCardController {
       'Binderful',
       'Arts & Entertainment > Hobbies & Creative Arts > Collectibles > Collectible Trading Cards',
       'Pokemon TCG',
-      'Singles, $setTag Singles, ${pokemon.rarity}}',
+      'Singles, $setTag Singles, ${pokemon.rarity}, ${isReverse ? 'Reverse Holo' : ''}',
       'TRUE',
       'Title',
       'Default Title',

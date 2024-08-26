@@ -3,6 +3,8 @@ import 'package:binderful_store/constants/constants.dart';
 import 'package:binderful_store/models/card_upload_class.dart';
 import 'package:binderful_store/screens/add_cards/controller/extended_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 // TODO break up this file
@@ -62,9 +64,10 @@ class ViewUploadList extends StatelessWidget {
           Padding(
             padding: const HalfGutter(),
             child: ElevatedButton(
-              onPressed: () async {
-                await controller.export();
-              },
+              onPressed: () => _export(
+                controller,
+                context,
+              ),
               child: const Text('Export'),
             ),
           ),
@@ -72,6 +75,55 @@ class ViewUploadList extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _export(
+  ExtendedAddCardController controller,
+  BuildContext context,
+) async {
+  await controller.export().then(
+    (value) {
+      showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Export cards to CSV'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SelectableText(
+                value,
+                style: const TextStyle(color: Colors.blue),
+                onTap: () async {
+                  await Clipboard.setData(
+                    ClipboardData(text: value),
+                  );
+                  context.pop();
+                  const snackBar = SnackBar(
+                    content: Text(
+                      'File name copied to clipboard',
+                    ),
+                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => context.pop(),
+              child: const Text('Close'),
+            ),
+            TextButton(
+              onPressed: () => _export(controller, context),
+              child: const Text('Copy file name and Close'),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
 
 class CardListViewTableColumn extends StatelessWidget {

@@ -27,6 +27,7 @@ class UpdateSetController extends ChangeNotifier {
   TextEditingController searchTextController = TextEditingController();
   List<SetData> filteredList = [];
   List<PricingHistoryUpdateDates> pricingHistories = [];
+  String priceUpdatingPrompt = '';
 
   final SetMaintenanceService service = SetMaintenanceService();
 
@@ -190,10 +191,13 @@ class UpdateSetController extends ChangeNotifier {
   }
 
   Future<void> updateSetPricingHistory(SetData? passedInSet) async {
-    late final SetData set;
+    late final MySetData set;
     final setID = passedInSet?.id ?? selectedSetID;
 
-    set = setsFromPokemonAPI.firstWhere((element) => element.id == setID);
+    set = setsFromRaven.firstWhere((element) => element.id == setID);
+
+    priceUpdatingPrompt = 'Fetching cards 0-${set.total}';
+    notifyListeners();
 
     final cardNumbers = <String, List<PricingHistoryData>>{};
     final pricingHistory = <PricingHistoryModel>[];
@@ -260,8 +264,9 @@ class UpdateSetController extends ChangeNotifier {
             cardNumbers.addAll({
               celCardNo.toString(): [
                 PricingHistoryData(
-                  cardName, rarity, double.tryParse(price) ?? 0.0,
-                  // DateTime.now().toString(),
+                  cardName,
+                  rarity,
+                  double.tryParse(price) ?? 0.0,
                 ),
               ],
             });
@@ -272,7 +277,6 @@ class UpdateSetController extends ChangeNotifier {
                 cardName,
                 rarity,
                 double.tryParse(price) ?? 0.0,
-                // DateTime.now().toString(),
               ),
             );
           } else {
@@ -293,6 +297,10 @@ class UpdateSetController extends ChangeNotifier {
         )!
             .split('/')
             .first;
+
+        priceUpdatingPrompt = 'Fetching cards $finalCardNo-${set.total}';
+        notifyListeners();
+
         if ((((int.tryParse(finalCardNo) ?? 0) >= set.total ||
                     finalCardNo == 'GG70' ||
                     finalCardNo == 'TG30') ||
@@ -399,10 +407,12 @@ class UpdateSetController extends ChangeNotifier {
       } else {
         count = 15;
       }
+
+      priceUpdatingPrompt = 'Updating prices for $i-${i + 15} of ${set.total}';
+      notifyListeners();
+
       final batch = pricingHistory.sublist(i, i + count).toList();
-      final data = batch
-          .map((element) => element.toJson())
-          .toList(); // Convert to a list of JSON representations
+      final data = batch.map((element) => element.toJson()).toList();
       final response = await http.post(
         apiUrl,
         headers: {
@@ -416,7 +426,6 @@ class UpdateSetController extends ChangeNotifier {
       debugPrint(response.statusCode.toString());
     }
 
-    await updateUSAPricingHistory(set);
     apiLoading = false;
     notifyListeners();
   }

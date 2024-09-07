@@ -23,7 +23,7 @@ class _UpdateSetsScreenState extends State<UpdateSetsScreen> {
     final controller = Provider.of<UpdateSetController>(context);
     return Scaffold(
       body: controller.screen == SetScreenEnum.setList
-          ? SetScreen(controller: controller)
+          ? const SetScreen()
           : Column(
               children: [
                 Padding(

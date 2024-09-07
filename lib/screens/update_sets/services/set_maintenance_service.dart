@@ -68,7 +68,7 @@ class SetMaintenanceService {
     final body = json.encode(set.toJson());
     debugPrint(body);
     final ravenResponse = await http.post(
-      Uri.parse('http://localhost:5027/api/Sets/AddSet'),
+      Uri.parse('http://localhost:5027/api/Pokemon/Sets/AddSet'),
       body: body,
       headers: <String, String>{
         'Content-Type': 'application/json',
@@ -79,13 +79,14 @@ class SetMaintenanceService {
 
   Future<void> addCardToRaven(List<CardRaven> cards) async {
     final body = json.encode(CardRaven.toJsonList(cards));
-    await http.post(
+    final response = await http.post(
       Uri.parse('http://localhost:5027/api/Pokemon/Cards/AddCards'),
       body: body,
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
     );
+    print(response);
   }
 
   Future<List<CardRaven>> getCardsFromRaven(String setID) async {

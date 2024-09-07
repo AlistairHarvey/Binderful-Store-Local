@@ -1,6 +1,6 @@
 // This is used to map endpoints for each set to a setID from the pokemonTCG Set
-// API. This is because they break them up differently and where prices are 
-// pulled from dont always match the same convention. 
+// API. This is because they break them up differently and where prices are
+// pulled from dont always match the same convention.
 
 enum SetId {
   base1,
@@ -163,6 +163,7 @@ enum SetId {
   sv4pt5,
   sv5,
   sv6,
+  sv6pt5,
 }
 
 extension SetBaseUrl on SetId {
@@ -488,6 +489,8 @@ extension SetBaseUrl on SetId {
         return 'sv5/temporal-forces/';
       case SetId.sv6:
         return 'sv6/twilight-masquerade/';
+      case SetId.sv6pt5:
+        return 'sv6pt5/shrouded-fable/';
     }
   }
 }
